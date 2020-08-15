@@ -1,0 +1,999 @@
+# -*- coding: utf-8 -*-
+
+'''
+import Modules
+print(dir(Modules))
+dir()是Python提供的一个API函数，dir()函数会自动寻找一个对象的所有属性(包括从父类中继承的属性)。
+API（Application Programming Interface，应用程序接口）函数是一些预先定义的函数。
+
+Python 标识符
+在 Python 里，标识符由字母、数字、下划线组成。
+在 Python 中，所有标识符可以包括英文、数字以及下划线(_)，但不能以数字开头。
+Python 中的标识符是区分大小写的。
+以下划线开头的标识符是有特殊意义的。以单下划线开头 _foo 的代表不能直接访问的类属性，
+需通过类提供的接口进行访问，不能用 from xxx import * 而导入。
+以双下划线开头的 __foo 代表类的私有成员，
+以双下划线开头和结尾的 __foo__ 代表 Python 里特殊方法专用的标识，
+如 __init__() 代表类的构造函数。
+Python 可以同一行显示多条语句，方法是用分号 ; 分开，
+
+is 用于判断两个变量引用对象是否为同一个， == 用于判断引用变量的值是否相等。
+类似于Java中的equal()和==。反之，is not 用于判断两个变量是否引用自不同的对象，
+而 != 用于判断引用变量的值是否不等。
+在上面的例子中，我们分别打印了两种运算符的比较结果和内存地址，所以可以得出：
+只要各对象的值一样，则 x == y 的值一定为True；
+如果对象的类型为整数或字符串且值一样，则 x == y和 x is y 的值为True。
+（经测试浮点型数值，只有正浮点数符合这条规律，负浮点数不符合）；
+list，tuple，dict，set值一样的话，x is y 则为False；
+x == y 与 x != y 的值相反，x is y 与 x is not y 的值相反。
+以上结论只针对对变量直接赋值或变量相互赋值后的比较，不针对两个变量之间拷贝后在进行比较。
+'''
+'''
+算法是计算机处理信息的本质。
+算法是独立存在的一种解决问题的方法和思想。
+算法的五大特性：
+输入；输出；有穷性；确定性；可行性。
+常见的时间复杂度
+O(1)、O(logn)、O(n)、O(nlogn)、O(n^2)、O(2^n)
+'''
+
+#如果 a+b+c=1000，且 a^2+b^2=c^2（a,b,c 为自然数），
+#如何求出所有a、b、c可能的组合?
+
+import time
+start = time.time()
+for a in range(1001):
+    for b in range(1001):
+        for c in range(1001):
+            if a**2+b**2 == c**2 and a+b+c==1000:
+                print('a = %d,b = %d,c = %d'%(a,b,c))
+end = time.time()
+print('The time is %f seconds'%(end-start))
+
+import time
+start = time.time()
+for a in range(1001):
+    for b in range(1001-a):
+        c = 1000 - a - b
+        if a**2+b**2 == c**2:
+            print('a = %d,b = %d,c = %d'%(a,b,c))
+end = time.time()
+print('The time is %f seconds'%(end-start))
+
+#时间复杂度为O(n)
+def cal1(n):
+    sum = 0
+    i = 1
+    for i in range(n+1):
+        sum += i
+        return sum
+#第一个for循环为常数循环，复杂度为O(1)，
+#第二个for为单层循环，为O(n)，
+#第三个for循环为双层嵌套循环，时间复杂度为O(n^2)
+def cal2(n):
+    sum = 0
+    i = 1
+    for i in range(100):
+        sum += i
+    for i in range(n+1):
+        sum += i
+    for i in range(n+1):
+        for i in range(n + 1):
+            pass
+#O(n^2)
+def cal3(n):
+    for i in range(n):
+        for j in range(i):
+            print(i,j)
+
+
+
+#分析列表添加的执行效率
+from timeit import Timer
+def test1():
+    l=[]
+    for i in range(1000):
+        l=l+[i]
+        
+def test2():
+    l=[]
+    for i in range(1000):
+        #尾末追加
+        l.append(i)    
+        
+def test3():
+    #列表推导式
+    l=[i for i in range(1000)]
+
+def test4():
+    l=list(range(1000))
+ 
+def test5():
+    l=[]
+    for i in range(1000):
+        #从头追加
+        l.insert(i)  
+        
+#函数要加引号
+t1=Timer('test1()','from __main__ import test1')
+print('add',t1.timeit(number=1000))
+t2=Timer('test2()','from __main__ import test2')
+print('add',t2.timeit(number=1000))
+t3=Timer('test3()','from __main__ import test3')
+print('add',t3.timeit(number=1000))
+t4=Timer('test4()','from __main__ import test4')
+print('add',t4.timeit(number=1000))
+t5=Timer('test5()','from __main__ import test5')
+print('add',t5.timeit(number=1000))
+'''
+
+
+#编写一个程序，查找所有可以被 7整除但不是 5 的倍数的数字。 
+#在2000到3200之间（均包括在内）。&与and等价
+'''
+L=[]
+for i in range(2000, 3200):
+    if (i%7==0)and(i%5!=0):
+        L.append(i)
+print(L)
+'''
+'''
+L=['A','B','C']
+L.append('D')
+print(L)
+'''
+
+#编写一个程序，可以计算给定数字的阶乘。 
+#结果应以逗号分隔的顺序打印在一行上。 
+'''
+y=int(input("请输入要计算的数:"))
+x=1
+for i in range(1,y+1):
+    x=x*i
+print(x)
+'''
+'''
+def func(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return (n * func(n - 1))
+x=int(input("请输入要计算的数:"))
+a=func(x)
+print(a)
+'''
+#使用给定的整数n，编写程序以生成包含（i，i * i）的字典，该字典为1到 n之间的整数（都
+#包括在内）。然后程序应打印字典。
+'''
+x=int(input("请输入要计算的数:"))
+y=dict()
+for i in range(1,x+1):
+    y[i]=i*i
+print(y)
+
+'''
+
+#编写一个程序，该程序从控制台接受一个逗号分隔的数字序列，并生成一个列表和一个包含
+#每个数字的元组。 
+'''
+x=input("请输入逗号分割的数:")
+#列表list []
+#str.xplit() -- 分隔符，默认为所有的空字符，包括空格、换行(\n)、制表符(\t)等
+a=x.split(",") 
+#tuple元组 （）
+#使用方括号[]创建列表，而使用括号()创建元组。
+#元组是不可变的， 而列表是可变的。
+#元组通常由不同的数据，而列表是相同类型的数据队列。
+#元组表示的是结构，而列表表示的是顺序。
+b=tuple(a)
+print(a,b)
+
+#定义一个至少具有两个方法的类： 
+#getString：从控制台输入获取字符串 
+#printString：以大写形式输出字符串。 
+#还请包括简单的测试功能以测试类方法。 
+
+#x=input("请输入字符:")
+#print(x.upper())
+
+class InputOutString(object): 
+     def __init__(self): 
+         self.s = "" 
+         
+     def getString(self): 
+         self.s = input() 
+ 
+     def printString(self): 
+         print(self.s.upper() )
+ 
+strObj = InputOutString() 
+strObj.getString() 
+strObj.printString() 
+
+
+import math 
+x=int(input("请输入数字:"))
+y=math.sqrt((2*50*x)/30)
+print(x,y)
+
+import math 
+c=50 
+h=30 
+value = [] 
+items=[x for x in input("请输入逗号分割的数:").split(',')] 
+for d in items: 
+     value.append(str(int(round(math.sqrt(2*c*float(d)/h)))))
+ 
+print(value)
+'''
+python中math模块常用的方法
+ceil:取大于等于x的最小的整数值，如果x是一个整数，则返回x
+copysign:把y的正负号加到x前面，可以使用0
+cos:求x的余弦，x必须是弧度
+degrees:把x从弧度转换成角度
+e:表示一个常量
+exp:返回math.e,也就是2.71828的x次方
+expm1:返回math.e的x(其值为2.71828)次方的值减１
+fabs:返回x的绝对值
+factorial:取x的阶乘的值
+floor:取小于等于x的最大的整数值，如果x是一个整数，则返回自身
+fmod:得到x/y的余数，其值是一个浮点数
+frexp:返回一个元组(m,e),其计算方式为：x分别除0.5和1,得到一个值的范围
+fsum:对迭代器里的每个元素进行求和操作
+gcd:返回x和y的最大公约数
+hypot:如果x是不是无穷大的数字,则返回True,否则返回False
+isfinite:如果x是正无穷大或负无穷大，则返回True,否则返回False
+isinf:如果x是正无穷大或负无穷大，则返回True,否则返回False
+isnan:如果x不是数字True,否则返回False
+ldexp:返回x*(2**i)的值
+log:返回x的自然对数，默认以e为基数，base参数给定时，将x的对数返回给定的base,计算式为：log(x)/log(base)
+log10:返回x的以10为底的对数
+log1p:返回x+1的自然对数(基数为e)的值
+log2:返回x的基2对数
+modf:返回由x的小数部分和整数部分组成的元组
+pi:数字常量，圆周率
+pow:返回x的y次方，即x**y
+radians:把角度x转换成弧度
+sin:求x(x为弧度)的正弦值
+sqrt:求x的平方根
+tan:返回x(x为弧度)的正切值
+trunc:返回x的整数部分
+'''
+
+input_str = input("请输入逗号分割的数:") 
+dimensions=[int(x) for x in input_str.split(',')] 
+rowNum=dimensions[0] 
+colNum=dimensions[1] 
+#初始化一个5x6每项为0（固定值）的数组（推荐使用）：
+#multilist = [[0 for col in range(5)] for row in range(6)] # 推荐
+#初始化一个rowNumxcolNum每项为0（固定值）的数组（推荐使用）：
+multilist = [[0 for col in range(colNum)] for row in range(rowNum)]  
+for row in range(rowNum): 
+     for col in range(colNum): 
+         multilist[row][col]= row*col 
+print( multilist )
+
+'''
+'''
+#编写一个程序，该程序接受以逗号分隔的单词序列作为输入，并在按字母顺序对它们进行排
+#序后以逗号分隔的顺序打印这些单词。 
+#items是一个列表
+items=[x for x in input("请输入逗号分割的字符:").split(',')] 
+items.sort() 
+print( ','.join(items) )
+print(items) 
+
+'''
+#列表不能使用upper
+'''
+lines = [] 
+while True: 
+     s =input("请输入逗号分割的字符:")
+     if s: 
+         lines.append(s.upper()) 
+     else: 
+         break; 
+ 
+for sentence in lines: 
+     print( sentence) 
+ '''    
+#使用set容器自动删除重复的数据，然后使用 sorted（）对数据进行排序。
+'''
+items=[x for x in input("请输入逗号分割的字符:").split(' ')] 
+print( ' '.join(sorted(set(items)) ))
+
+'''
+#编写一个程序，该程序接受以逗号分隔的 4位二进制数字序列作为输入，然后检查它们是否
+#可被5整除。被5整除的数字将以逗号分隔的顺序打印。 
+'''
+value = [] 
+items=[x for x in input("请输入逗号分割的二进制数字:").split(',')] 
+for p in items: 
+     intp = int(p, 2) 
+     if not intp%5: 
+         value.append(p) 
+ 
+print (','.join(value) )
+'''
+'''
+value = [] 
+for p in range(1000,3010): 
+    s=str(p)
+    if (int(s[0])%2==0) and (int(s[1])%2==0) and (int(s[2])%2==0) and (int(s[3])%2==0):
+        value.append(s) 
+
+print (','.join(value)) 
+print (value)
+'''
+#编写一个接受句子并计算字母和数字数量的程序。 
+'''
+s =input("请输入数字和字符:") 
+d={"DIGITS":0, "LETTERS":0} 
+for c in s: 
+    #str.isdigit()如果字符串只包含数字则返回 True 否则返回 False。
+     if c.isdigit(): 
+         d["DIGITS"]+=1 
+    #isalpha() 方法检测字符串是否只由字母组成。如果字符串至少有一个字符并且所有字符都是字母则返回 True，否则返回 False。
+     elif c.isalpha(): 
+         d["LETTERS"]+=1 
+     else: 
+          pass 
+print( "LETTERS", d["LETTERS"] )
+print ("DIGITS", d["DIGITS"] )    
+'''
+'''
+s =input("请输入数字和字符:") 
+d={"U":0, "L":0} 
+for c in s: 
+     if c.islower(): 
+         d["L"]+=1 
+     elif c.isupper():
+        d["U"]+=1 
+     else:
+        pass
+print( "U",d["U"] )      
+print( "L",d["L"] )  
+'''
+
+'''
+s =input("请输入一个数字:") 
+a1=str(s)
+a2=str(s)+str(s)
+a3=str(s)+str(s)+str(s)
+a4=str(s)+str(s)+str(s)+str(s)
+a=int(a1)+int(a2)+int(a3)+int(a4)
+print(a)
+'''
+'''
+value = [] 
+items=[x for x in input("请输入逗号数字:").split(',')] 
+for c in items: 
+     if (int(c)%2!=0): 
+         value.append(c)
+         
+print(value)
+
+'''
+'''
+d={"D":0, "W":0} 
+while True: 
+    s=input("请输入数字和字符:") 
+    if not s: 
+        break 
+    values = s.split(" ") 
+    operation = values[0] 
+    amount = int(values[1])
+    if (operation=="D"): 
+        d["D"]=d["D"]+amount  
+    elif (operation=="W"):
+        d["W"]=d["W"]+amount 
+    else:
+        pass
+netAmount= d["D"]- d["W"]
+print( "D",d["D"] )      
+print( "W",d["W"] )  
+print("NetAmount", netAmount )  
+'''
+'''
+netAmount = 0 
+while True: 
+     s = input("请输入数字和字符:") 
+     if not s: 
+         break 
+     values = s.split(" ") 
+     operation = values[0] 
+     amount = int(values[1]) 
+     if operation=="D": 
+         netAmount+=amount 
+     elif operation=="W": 
+         netAmount-=amount 
+     else: 
+         pass 
+print( netAmount )
+
+
+'''
+网站要求用户输入用户名和密码进行注册。编写程序以检查用户输入的密码的有效性。 
+以下是检查密码的标准： 
+1. [az]之间至少1 个字母 
+2. [0-9]之间至少1个数字 
+1. [AZ]之间至少1个字母 
+3. [$＃@]中的至少1 个字符 
+4.最小交易密码长度：6 
+5.交易密码的最大长度：12 
+您的程序应接受一系列用逗号分隔的密码，并将根据上述条件进行检查。符合条件的密码将
+被打印，每个密码之间用逗号分隔。 
+'''
+
+
+import re 
+value = [] 
+items=[x for x in input("请输入密码:").split(',')] 
+for p in items: 
+     if len(p)<6 or len(p)>12: 
+         print ("输入密码格式不对" )
+         continue 
+     else: 
+         pass 
+     if not re.search("[a-z]",p): 
+         continue 
+     elif not re.search("[0-9]",p): 
+         continue 
+     elif not re.search("[A-Z]",p): 
+         continue 
+     elif not re.search("[$#@]",p): 
+         continue 
+     elif re.search("\s",p): 
+         continue 
+     else: 
+         pass 
+     value.append(p) 
+print (",".join(value) )
+
+
+
+'''
+您需要编写程序以升序对（名称，年龄，身高）元组进行排序，其中名称是字符串，年龄和
+身高是数字。元组由控制台输入。排序标准是： 
+1：根据名称排序； 
+2：然后根据年龄排序； 
+3：然后按分数排序。 
+优先级是名称>年龄>得分。 
+'''
+
+import operator
+#from operator import itemgetter, attrgetter 
+l=[]
+while True: 
+    t=input("请输入元组名称，年龄，身高:")
+    if not t:
+        break
+    l.append(tuple(t.split(","))) 
+print(sorted(l,key=operator.itemgetter(0,1,2)) )
+    
+'''
+#用生成器定义一个类，该生成器可以在给定范围 0和 n之间迭代可以被7 整除的数字。
+
+#return之后再把它看做一个是生成器（generator）的一部分（带yield的函数才是真正的迭代器）
+'''
+def putNumbers(n): 
+     i = 0 
+     while i<n: 
+         j=i 
+         i=i+1 
+         if j%7==0: 
+             yield j 
+             
+for i in putNumbers(21): 
+     print( i )           
+ 
+'''
+'''
+def foo():
+    print("starting...")
+    while True:
+        res = yield 4
+        print("res:",res)
+g = foo()
+print(next(g))
+print("*"*20)
+print(next(g))
+
+'''
+1.程序开始执行以后，因为foo函数中有yield关键字，所以foo函数并不会真的执行，
+而是先得到一个生成器g(相当于一个对象)
+2.直到调用next方法，foo函数正式开始执行，先执行foo函数中的print方法，然后进入while循环
+3.程序遇到yield关键字，然后把yield想想成return,return了一个4之后，程序停止，
+并没有执行赋值给res操作，此时next(g)语句执行完成，所以输出的前两行
+（第一个是while上面的print的结果,第二个是return出的结果）是执行print(next(g))的结果，
+4.程序执行print("*"*20)，输出20个*
+5.又开始执行下面的print(next(g)),这个时候和上面那个差不多，不过不同的是，
+这个时候是从刚才那个next程序停止的地方开始执行的，也就是要执行res的赋值操作，
+这时候要注意，这个时候赋值操作的右边是没有值的（因为刚才那个是return出去了，
+并没有给赋值操作的左边传参数），所以这个时候res赋值是None,所以接着下面的输出就是res:None,
+6.程序会继续在while里执行，又一次碰到yield,这个时候同样return 出4，
+然后程序停止，print函数输出的4就是这次return出的4.
+到这里你可能就明白yield和return的关系和区别了，
+带yield的函数是一个生成器，而不是一个函数了，这个生成器有一个函数就是next函数，
+next就相当于“下一步”生成哪个数，这一次的next开始的地方是接着上一次的next停止的地方执行的，
+所以调用next的时候，生成器并不会从foo函数的开始执行，只是接着上一步停止的地方开始，
+然后遇到yield后，return出要生成的数，此步就结束。
+为什么用这个生成器，是因为如果用List的话，会占用更大的空间
+
+'''
+'''
+机器人从原始点（0,0）开始在平面中移动。机器人可以按照给定的步骤向上，下，左和右移
+动。机器人运动的轨迹如下所示： 
+上5 
+下3 
+左3 
+右2 
+? 
+方向后的数字为步长。请编写一个程序，以计算一系列移动和原始点之后与当前位置的距离。
+如果距离是浮点数，则只需打印最接近的整数。 
+例： 
+如果给出以下元组作为程序的输入： 
+上5 
+下3 
+左3 
+右2 
+
+'''
+import math
+x=0
+y=0
+
+while True:
+    t=input("请输入方向和步长：")
+    if not t: 
+        break 
+    values=t.split(" ")
+    operation = values[0] 
+    value= int(values[1]) 
+    if operation=="up": 
+         y=y+value
+    elif operation=="down": 
+         y=y-value
+    elif operation=="left": 
+         x=x+value     
+    elif operation=="right": 
+         x=x-value
+    else: 
+         pass
+     
+print( math.sqrt(x*x+y*y) )
+
+'''
+
+#编写程序以计算输入中单词的频率。在按字母数字顺序对键进行排序后，应输出输出。
+'''
+假设将以下输入提供给程序：
+New to Python or choosing between Python 2 and Python 3? Read Python 2 or Python 3.
+输出：
+2:2
+3.:1
+3?:1
+New:1
+Python:5
+Read:1
+and:1
+between:1
+choosing:1
+or:2
+to:1
+'''
+'''
+import collections
+s = list(input().split())
+dict = {}
+for i in s:
+    k = s.count(i)
+    dict.setdefault(i,k)
+
+l = list(dict.items())
+l.sort()
+for i in l:
+    print(i[0],':',i[1])
+'''
+'''
+freq = {}   # frequency of words in text
+print("请输入：")
+line = input()
+for word in line.split():
+    freq[word] = freq.get(word,0)+1
+words = sorted(freq.keys())  #按key值对字典排序
+ 
+for w in words:
+    print ("%s:%d" % (w,freq[w]))
+'''
+#内置文档方法是__doc__
+'''
+print(abs.__doc__)
+print(int.__doc__)
+print(input.__doc__)
+ 
+def square(num):
+    ''''''Return the square value of the input number.
+    The input number must be integer.
+    ''''''
+    return num ** 2
+ 
+print(square(2))
+print(square.__doc__)
+'''
+#定义一个类，该类具有一个类参数并且具有相同的实例参数。
+'''
+class Person: 
+     # Define the class parameter "name" 
+     name = "Person" 
+      
+     def __init__(self, name = None): 
+         # self.name is the instance parameter 
+         self.name = name 
+ 
+jeffrey = Person("Jeffrey") 
+print( "%s name is %s" % (Person.name, jeffrey.name) )
+ 
+nico = Person() 
+nico.name = "Nico" 
+## %s意思是作为一个替代，将后面的‘str2’字符串加到str1后面,%d指的是整型,%f浮点型
+#一种字符串格式化的语法， 基本用法是将值插入到%s占位符的字符串中。
+print( "%s name is %s" % (Person.name, nico.name) )
+'''
+
+'''
+def sab(a,b):
+    c=a+b
+    return c
+print(sab(1,2))
+'''
+'''
+def strint(a):
+    print(str(a))
+    
+strint(3)
+'''
+'''
+def inst(a,b):
+    return int(a)+int(b)
+print(inst("3","4"))
+'''
+'''
+def suin(a,b):
+    print(a+b)
+print(suin("3","2"))
+'''
+'''
+def sli(a,b):
+    if len(a)==len(b):
+        print(a,b)
+    else:
+        print(len(a),len(b))
+
+sli("seefae","sefkko")
+'''
+'''
+def sli(n):
+    if n%2==0:
+        print(str(n)+"是偶数")
+    else:
+        print(str(n)+"是奇数")
+
+sli(3)            
+'''
+'''
+def sli(a):
+    #{}或dict()
+    l=dict()
+    l[a]=a**2
+    return l
+sli(2)
+'''
+'''
+def printDict(): 
+  d=dict() 
+  for i in range(1,21): 
+    d[i]=i**2 
+  #item（）来获取键/值对
+  for (k,v) in d.items():   
+    print(k) 
+      
+printDict() 
+
+'''
+'''
+def printDict(): 
+  d=dict() 
+  for i in range(1,21): 
+    d[i]=i**2 
+  #使用keys（）迭代字典中的键。
+  for k in d.keys():   
+    print (k) 
+  #使用keys（）迭代字典中的值。
+  for k in d.values():   
+    print (k)     
+printDict() 
+'''
+'''
+def lide():
+    l=[]
+    for i in range(1,21):
+        l.append(i**2)
+    print(l[:5])
+    print(l[-5:])
+    print(l[5:])   
+    #tuple元组
+    print(tuple(l))
+lide()
+'''
+'''
+def cap(a):
+    #使用[n1：n2]表示法从元组中获取一个切片
+    n=int(len(a)/2)
+    tp1=a[:n]
+    tp2=a[n:]
+    print(tp1)
+    print(tp2)
+
+cap(((1,2,3,4,5)))
+'''
+
+
+'''
+
+x=input("请你输入字母：")
+if x=="YES":
+    print("YES")
+elif x=="yes":
+    print("YES")
+elif x==("Yes"):
+    print("YES")
+else:
+    print("No")
+
+'''
+'''
+li =[1,2,2,3,4,5,6,7,8,9,10,4]
+li1 =tuple(li)
+li2=[]
+for i in li1:
+   if li1[i]%2==0:
+      li2.append(li1[i])
+print(li2)
+
+'''
+'''
+list_1 = (1,2,3,4,5,6,7,8,9,10)
+list_2 = list()
+for i in list_1:
+    if i%2==0:
+        list_2.append(i)
+print(list_2)
+
+
+'''
+#使用filter（）过滤列表中的某些元素
+#使用lambda定义匿名函数。 
+#使用map（）生成一个列表。 
+#[表达式 for 变量 in 列表]    或者  [表达式 for 变量 in 列表 if 条件]
+'''
+'''
+py2：返回结果为True的元素组成的列表
+py3: 返回Python2.x 中返回的是过滤后的列表, 而 Python3 中返回到是一个 filter 类。
+filter 类实现了 __iter__ 和 __next__ 方法, 可以看成是一个迭代器, 有惰性运算的特性, 相对 Python2.x 提升了性能, 可以节约内存。
+a = filter(lambda x: x % 2 == 0, range(10))
+print(a)
+可以用list将filter类中的元素转化为列表输出
+
+
+Python内置函数接收函数作为参数。典型的此类内置函数有这些：
+filter函数。此时lambda函数用于指定过滤列表元素的条件。例如filter(lambda x: x % 3 == 0, [1, 2, 3])指定将列表[1,2,3]中能够被3整除的元素过滤出来，其结果是[3]。
+sorted函数。此时lambda函数用于指定对列表中所有元素进行排序的准则。例如sorted([1, 2, 3, 4, 5, 6, 7, 8, 9], key=lambda x: abs(5-x))将列表[1, 2, 3, 4, 5, 6, 7, 8, 9]按照元素与5距离从小到大进行排序，其结果是[5, 4, 6, 3, 7, 2, 8, 1, 9]。
+map函数。此时lambda函数用于指定对列表中每一个元素的共同操作。例如map(lambda x: x+1, [1, 2,3])将列表[1, 2, 3]中的元素分别加1，其结果[2, 3, 4]。
+reduce函数。此时lambda函数用于指定列表中两两相邻元素的结合条件。例如reduce(lambda a, b: '{}, {}'.format(a, b), [1, 2, 3, 4, 5, 6, 7, 8, 9])将列表 [1, 2, 3, 4, 5, 6, 7, 8, 9]中的元素从左往右两两以逗号分隔的字符的形式依次结合起来，其结果是'1, 2, 3, 4, 5, 6, 7, 8, 9'。
+
+'''
+li=[x for x in range(1,21)]
+#li = [1,2,3,4,5,6,7,8,9,10] 
+squaredNumbers1 =list( map(lambda x: x**2, range(1,21)) )
+evenNumbers =list( filter(lambda x: x%2==0, li) )
+squaredNumbers =list( map(lambda x: x**2, list( filter(lambda x: x%2==0, li) )) )
+print( squaredNumbers1)
+print( evenNumbers )
+'''
+
+#定义一个名为American的类，该类具有一个称为 printNationality的静态方法。 
+#使用类Subclass（ParentClass）定义一个子类。 
+#@staticmethod 静态方法只是名义上归属类管理，但是不能使用类变量和实例变量，是类的工具包
+#放在函数前（该函数不传入self或者cls），所以不能访问类属性和实例属性
+'''
+class American(object): 
+     @staticmethod 
+     def printNationality(): 
+         print( "America" )
+ 
+anAmerican = American() 
+anAmerican.printNationality() 
+American.printNationality() 
+'''
+'''
+class American(object): 
+     pass 
+ 
+class NewYorker(American): 
+     pass 
+ 
+anAmerican = American() 
+aNewYorker = NewYorker() 
+print( anAmerican )
+print( aNewYorker )
+ '''
+#定义一个名为 Circle 的类，该类可以由半径构造。Circle 类具有一种可以计算面积的方法。  
+#'return' outside function
+#mianji() takes no arguments
+'''
+class mianji():
+    def __init__(self,r):
+        self=r
+    def area(i):
+     mian=3.14*i*i
+     return mian
+print(mianji.area(2))
+  '''
+'''  
+class Circle(object): 
+     def __init__(self, r): 
+         self.radius = r 
+ 
+     def area(self): 
+         return self.radius**2*3.14 
+aCircle = Circle(2) 
+print (aCircle.area() )
+ '''
+ 
+#定义一个名为Rectangle的类，该类可以通过长度和宽度来构造。Rectangle 类具有可以计算
+#面积的方法。  类里面没有参数，是对象
+'''
+class mianji(object ):
+    def __init__(self,a,b):
+        self.a=a
+        self.b=b
+    def area(a,b):
+     mian=a*b
+     return mian
+print(mianji.area(2,2))
+'''
+
+#定义一个名为Shape的类及其子类Square。Square类具有一个init函数，该函数以长度作为
+#参数。这两个类都有一个Area函数，该函数可以打印Shape的区域默认为0 的形状的区域。
+#要覆盖超类中的方法，我们可以在超类中定义一个具有相同名称的方法。 
+''' 
+class Shape():
+    def __init__(self):
+        pass
+    def area():
+        return 0
+class Square(Shape): 
+     def __init__(self, l): 
+         Shape.__init__(self) 
+         self.length = l 
+ 
+     def area(self): 
+         return self.length*self.length 
+ 
+aSquare= Square(3) 
+print (aSquare.area() )
+    
+aSquare= square(3,1) 
+print( aSquare.area() )
+
+#请引发RuntimeError异常。 
+#使用raise（）引发异常。
+
+raise RuntimeError('something wrong') 
+
+#编写一个函数以计算 5/0并使用try / except捕获异常。 
+
+def throws(): 
+    return 5.60 /0
+ 
+try: 
+     throws() 
+except ZeroDivisionError as e: 
+     print (e,"division by zero!" )
+except Exception as e: 
+     print( e,'Caught an exception' )
+finally: 
+     print( 'In finally block for cleanup' )
+     
+     
+#定义一个自定义异常类，该类将字符串消息作为属性。 
+#要定义自定义异常，我们需要定义一个从Exception继承的类。 
+class MyError(Exception): 
+     """My own exception class 
+ 
+     Attributes: 
+         msg   -- explanation of the error 
+     """ 
+ 
+     def __init__(self, msg): 
+         self.msg = msg 
+ 
+error = MyError("something wrong") 
+
+
+#假设我们有一些“  username@companyname.com”格式的电子邮件地址，请编写程序以打印
+#给定电子邮件地址的用户名。用户名和公司名都仅由字母组成。 
+#使用\ w 匹配字母。 
+#'list' object has no attribute 'split'
+s=input("请输入邮箱：")
+sc=s.split(".")
+sname=str(sc[0:1]).split("@")
+name=sname[0]
+comp=sname[1]
+
+import re 
+emailAddress =input("请输入邮箱：") 
+pat2 = "(\w+)@(\w+)\.+(com)" 
+r2 = re.match(pat2,emailAddress) 
+print (r2.group(1) )
+print (r2.group(2) )
+print (r2.group(1,2) )
+print (r2.group(1,2,3) )
+
+#re.findall（）使用正则表达式查找所有子字符串
+'''
+1.一个 . 就 是匹配除 \n (换行符)以外的任意一个字符
+2.* 前面的字符出现0次或以上
+3..* 贪婪，匹配从.*前面为开始到后面为结束的所有内容
+4..*? 非贪婪，遇到开始和结束就进行截取，因此截取多次符合的结果，中间没有字符也会被截取
+5.(.*?) 非贪婪，与上面一样，只是与上面的相比多了一个括号，只保留括号的内容
+
+.	匹配除换行符以外的任意字符
+\w	匹配字母或数字或下划线或汉字
+\s	匹配任意的空白符
+\d	匹配数字
+\b	匹配单词的开始或结束
+^	匹配字符串的开始
+$	匹配字符串的结束
+
+*	重复零次或更多次
++	重复一次或更多次
+?	重复零次或一次
+{n}	重复n次
+{n,}	重复n次或更多次
+{n,m}	重复n到m次
+
+*?	重复任意次，但尽可能少重复
++?	重复1次或更多次，但尽可能少重复
+??	重复0次或1次，但尽可能少重复
+{n,m}?	重复n到m次，但尽可能少重复
+{n,}?	重复n次以上，但尽可能少重复
+
+\W	匹配任意不是字母，数字，下划线，汉字的字符
+\S	匹配任意不是空白符的字符
+\D	匹配任意非数字的字符
+\B	匹配不是单词开头或结束的位置
+[^x]	匹配除了x以外的任意字符
+[^aeiou]	匹配除了aeiou这几个字母以外的任意字符
+
+分类	代码/语法	说明
+捕获	(exp)	匹配exp,并捕获文本到自动命名的组里
+(?<name>exp)	匹配exp,并捕获文本到名称为name的组里，也可以写成(?'name'exp)
+(?:exp)	匹配exp,不捕获匹配的文本，也不给此分组分配组号
+零宽断言	(?=exp)	匹配exp前面的位置
+(?<=exp)	匹配exp后面的位置
+(?!exp)	匹配后面跟的不是exp的位置
+(?<!exp)	匹配前面不是exp的位置
+注释	(?#comment)	这种类型的分组不对正则表达式的处理产生任何影响，用于提供注释让人阅读
+'''
+import re 
+s =input("请输入字符：") 
+t=s.split(" ")
+#t2=re.search(["0-9"],t)
+t2=re.findall("\d+",s) 
+print(t2)
+
+#re.search("[0-9]",p)
+
+
